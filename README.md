@@ -21,9 +21,9 @@ Requirements:
 
 Datasets (in dataset folder):
 ==================
- - Biocreative II
- - NCBI
- - JNLPBA
+ - Biocreative II (http://biocreative.sourceforge.net/biocreative_2_dataset.html)
+ - NCBI (https://www.ncbi.nlm.nih.gov/CBBresearch/Dogan/DISEASE/)
+ - JNLPBA (http://www.nactem.ac.uk/tsujii/GENIA/ERtask/report.html) 
 
 
 Train GRAMCNN example:
