@@ -14,7 +14,7 @@ from loader import word_mapping, char_mapping, tag_mapping, pt_mapping
 from loader import update_tag_scheme, prepare_dataset
 from loader import augment_with_pretrained
 from gensim.models import word2vec
-from LSTMTDNN import LSTMTDNN
+from GRAMCNN import GRAMCNN
 
 import tensorflow as tf
 
@@ -202,10 +202,6 @@ if 'bin' in parameters['pre_emb']:
 else:
     wordmodel = word2vec.Word2Vec.load_word2vec_format(parameters['pre_emb'], binary=False)
 
-# Initialize model
-#save parameters and initialize mappings
-# model = Model(parameters=parameters, models_path=models_path)
-# print "Model location: %s" % model.model_path
 
 # Data parameters
 lower = parameters['lower']
@@ -260,11 +256,11 @@ if not parameters['reload']:
     dico_chars, char_to_id, id_to_char = char_mapping(train_sentences)
     dico_tags, tag_to_id, id_to_tag = tag_mapping(train_sentences)
     dico_pts, pt_to_id, id_to_pt = pt_mapping(train_sentences + dev_sentences)
-    if not os.path.exists(os.path.join('models', model_name)):
-            os.makedirs(os.path.join('models', model_name))
-    save_mappings(os.path.join('models', model_name, 'mappings.pkl'), word_to_id, char_to_id, tag_to_id, pt_to_id, dico_words, id_to_tag)
+    if not os.path.exists(os.path.join(models_path, model_name)):
+            os.makedirs(os.path.join(models_path,model_name))
+    save_mappings(os.path.join(models_path, model_name, 'mappings.pkl'), word_to_id, char_to_id, tag_to_id, pt_to_id, dico_words, id_to_tag)
 else:
-    word_to_id, char_to_id, tag_to_id, pt_to_id, dico_words, id_to_tag = reload_mappings(os.path.join('models',model_name, 'mappings.pkl'))
+    word_to_id, char_to_id, tag_to_id, pt_to_id, dico_words, id_to_tag = reload_mappings(os.path.join(models_path,model_name, 'mappings.pkl'))
     dico_words_train = dico_words
     id_to_word = {v: k for k, v in word_to_id.items()}
 # Index data
@@ -279,14 +275,12 @@ if os.path.isfile(opts.test):
     test_data,m3 = prepare_dataset(
         test_sentences, word_to_id, char_to_id, tag_to_id, pt_to_id,lower
     )
-    #print m3
-#print m1
-#print m2
-max_seq_len = max(m1,m2,m3)
-#print "max length is %i" % (max_seq_len)
 
-#print "%i / %i  sentences in train / dev." % (
-#    len(train_data), len(dev_data))
+max_seq_len = max(m1,m2,m3)
+print "max length is %i" % (max_seq_len)
+
+print "%i / %i  sentences in train / dev." % (
+   len(train_data), len(dev_data))
 
 #
 # Train network
@@ -300,10 +294,6 @@ best_dev = -np.inf
 best_test = -np.inf
 count = 0
 
-#print len(dico_words)
-#print len(char_to_id)
-#print len(wordmodel.vocab)
-
 
 #initilaze the embedding matrix
 word_emb_weight = np.zeros((len(dico_words), parameters['word_dim']))
@@ -316,9 +306,6 @@ for i in xrange(n_words):
         if word in wordmodel:
             word_emb_weight[i] = wordmodel[word]
             c_found += 1
-        # elif word.lower() in wordmodel:
-        #     word_emb_weight[i] = wordmodel[word.lower()]
-        #     c_lower += 1
         elif re.sub('\d', '0', word) in wordmodel:
             word_emb_weight[i] = wordmodel[
                 re.sub('\d', '0', word)
@@ -336,7 +323,7 @@ print ('%i found directly, %i after lowercasing, '
           c_found, c_lower, c_zeros
       )
 
-lstmtdnn = LSTMTDNN(n_words, len(char_to_id), len(pt_to_id),
+gramcnn = GRAMCNN(n_words, len(char_to_id), len(pt_to_id),
                     use_word = parameters['use_word'],
                     use_char = parameters['use_char'],
                     use_pts = parameters['pts'],
@@ -348,7 +335,7 @@ lstmtdnn = LSTMTDNN(n_words, len(char_to_id), len(pt_to_id),
                     padding = parameters['padding'], max_seq_len = max_seq_len)
 
 if parameters['reload']:
-    lstmtdnn.load('models',model_name)
+    gramcnn.load(models_path ,model_name)
 
 for epoch in xrange(n_epochs):
     epoch_costs = []
@@ -367,7 +354,7 @@ for epoch in xrange(n_epochs):
         train_loss = []
         temp = []
         temp.append(word_len)
-        batch_loss = lstmtdnn.train(inputs, temp)
+        batch_loss = gramcnn.train(inputs, temp)
 
         train_loss.append(batch_loss)
 
@@ -377,7 +364,7 @@ for epoch in xrange(n_epochs):
             train_loss = []
 
         if i % 2000 == 0 and i != 0:
-            dev_score = evaluate(parameters, lstmtdnn, dev_sentences,
+            dev_score = evaluate(parameters, gramcnn, dev_sentences,
                                  dev_data, id_to_tag, padding = parameters['padding'],
                                  max_seq_len = max_seq_len, use_pts = parameters['pts'])
             print "dev_score_end"
@@ -386,10 +373,10 @@ for epoch in xrange(n_epochs):
                 best_dev = dev_score
                 print "New best score on dev."
                 print "Saving model to disk..."
-                lstmtdnn.save('models',model_name)
+                gramcnn.save(models_path ,model_name)
             if os.path.isfile(opts.test):
                 if i % 8000 == 0 and i != 0:
-                    test_score = evaluate(parameters, lstmtdnn, test_sentences,
+                    test_score = evaluate(parameters, gramcnn, test_sentences,
                                           test_data, id_to_tag, padding = parameters['padding'],
                                           max_seq_len = max_seq_len, use_pts = parameters['pts'])
                     print "Score on test: %.5f" % test_score

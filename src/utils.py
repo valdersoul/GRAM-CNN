@@ -2,13 +2,12 @@ import os
 import re
 import codecs
 import numpy as np
-import theano
 
 import cPickle
 
 
-models_path = "./models"
-eval_path = "./evaluation"
+models_path = "../models"
+eval_path = "../evaluation"
 eval_temp = os.path.join(eval_path, "temp_result")
 eval_script = os.path.join(eval_path, "conlleval")
 
@@ -41,18 +40,6 @@ def set_values(name, param, pretrained):
     param.set_value(np.reshape(
         pretrained, param_value.shape
     ).astype(np.float32))
-
-
-def shared(shape, name):
-    """
-    Create a shared object of a numpy array.
-    """
-    if len(shape) == 1:
-        value = np.zeros(shape)  # bias are initialized with zeros
-    else:
-        drange = np.sqrt(6. / (np.sum(shape)))
-        value = drange * np.random.uniform(low=-1.0, high=1.0, size=shape)
-    return theano.shared(value=value.astype(theano.config.floatX), name=name)
 
 
 def create_dico(item_list):

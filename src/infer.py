@@ -14,7 +14,7 @@ from loader import word_mapping, char_mapping, tag_mapping, pt_mapping
 from loader import update_tag_scheme, prepare_dataset
 from loader import augment_with_pretrained
 from gensim.models import word2vec
-from LSTMTDNN import LSTMTDNN
+from GRAMCNN import GRAMCNN
 
 import tensorflow as tf
 
@@ -198,25 +198,17 @@ if 'bin' in parameters['pre_emb']:
 else:
     wordmodel = word2vec.Word2Vec.load_word2vec_format(parameters['pre_emb'], binary=False)
 
-# Initialize model
-#save parameters and initialize mappings
-# model = Model(parameters=parameters, models_path=models_path)
-# print "Model location: %s" % model.model_path
-
 # Data parameters
 lower = parameters['lower']
 zeros = parameters['zeros']
 tag_scheme = parameters['tag_scheme']
 
-# Load sentences
-# train_sentences = loader.load_sentences(opts.train, lower, zeros)
-# dev_sentences = loader.load_sentences(opts.dev, lower, zeros)
 
 if os.path.isfile(opts.test):
     test_sentences = loader.load_sentences(opts.test, lower, zeros)
     update_tag_scheme(test_sentences, tag_scheme)
 
-word_to_id, char_to_id, tag_to_id, pt_to_id, dico_words, id_to_tag = reload_mappings(os.path.join('models',model_name, 'mappings.pkl'))
+word_to_id, char_to_id, tag_to_id, pt_to_id, dico_words, id_to_tag = reload_mappings(os.path.join(models_path ,model_name, 'mappings.pkl'))
 
 
 if os.path.isfile(opts.test):
@@ -227,14 +219,6 @@ if os.path.isfile(opts.test):
 print "%i   sentences in test." % (
     len(test_data))
 
-# print "%i / %i  sentences in train / dev." % (
-#     len(train_data), len(dev_data))
-
-#
-# Train network
-#
-# singletons = set([word_to_id[k] for k, v
-#                   in dico_words_train.items() if v == 1])
 
 n_epochs = 100  # number of epochs over the training set
 freq_eval = 2000  # evaluate on dev every freq_eval steps
@@ -243,15 +227,13 @@ best_test = -np.inf
 count = 0
 max_seq_len = m3 if m3 > 200 else 200
 
-
-
 #initilaze the embedding matrix
 word_emb_weight = np.zeros((len(dico_words), parameters['word_dim']))
 n_words = len(dico_words)
 
 
 
-lstmtdnn = LSTMTDNN(n_words, len(char_to_id), len(pt_to_id),
+gramcnn = GRAMCNN(n_words, len(char_to_id), len(pt_to_id),
                     use_word = parameters['use_word'],
                     use_char = parameters['use_char'],
                     use_pts = parameters['pts'],
@@ -262,9 +244,9 @@ lstmtdnn = LSTMTDNN(n_words, len(char_to_id), len(pt_to_id),
                     kernels=parameters['kernels'], hidden_size = parameters['word_lstm_dim'], hidden_layers = parameters['hidden_layer'],
                     padding = parameters['padding'], max_seq_len = max_seq_len)
 
-lstmtdnn.load('models',model_name)
+gramcnn.load(models_path ,model_name)
 
-test_score, output_path = evaluate(parameters, lstmtdnn, test_sentences,
+test_score, output_path = evaluate(parameters, gramcnn, test_sentences,
                                       test_data, id_to_tag, remove = False, max_seq_len = max_seq_len, padding = parameters['padding'], use_pts = parameters['pts'])
 
 create_result(output_path)

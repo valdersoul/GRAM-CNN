@@ -5,6 +5,7 @@ Pre-trained embedding are from: <br>
 https://github.com/cambridgeltl/BioNLP-2016 <br>
 Some code (loader.py and utils.py) are adopted from: <br>
 https://github.com/glample/tagger <br>
+https://github.com/carpedm20/lstm-char-cnn-tensorflow/blob/master/models/TDNN.py <br>
 Source code for the paper: 
 
 ----------
