@@ -398,5 +398,17 @@ def create_result(path):
                 current_loc += len(line_s[0])
                 end = current_loc 
 
-
-
+def create_JNLPBA_result(path):
+    """
+    make output file can be evaluated by JNLPBA eval script
+    """
+    output_path = "result_JNLPBA.eval"
+    with open(path, 'r') as fin, open(output_path , 'w') as fout:
+        for line in fin:
+            line_s = line.split()
+            if not line_s:
+                fout.write("\n")
+                continue
+            fout.write("%s\t%s\n" % (line_s[0], line_s[-1]))
+        fout.write("\n")
+    

@@ -9,7 +9,7 @@ from collections import OrderedDict
 from utils import create_input
 import loader
 
-from utils import models_path, evaluate, eval_script, eval_temp, reload_mappings, create_result
+from utils import models_path, evaluate, eval_script, eval_temp, reload_mappings, create_result, create_JNLPBA_result
 from loader import word_mapping, char_mapping, tag_mapping, pt_mapping
 from loader import update_tag_scheme, prepare_dataset
 from loader import augment_with_pretrained
@@ -249,9 +249,14 @@ gramcnn.load(models_path ,model_name)
 test_score, output_path = evaluate(parameters, gramcnn, test_sentences,
                                       test_data, id_to_tag, remove = False, max_seq_len = max_seq_len, padding = parameters['padding'], use_pts = parameters['pts'])
 
-create_result(output_path)
 #os.remove(output_path)
 print (output_path)
 if 'bc2' in opts.test:
+    create_result(output_path)
     from subprocess import call
     call("perl alt_eval.perl -gene GENE.eval -altgene ALTGENE.eval result.eval".split())
+
+if 'Genia4EReval1' in opts.test:
+    create_JNLPBA_result(output_path)
+    from subprocess import call
+    call("perl evalIOB2.pl result_JNLPBA.eval Genia4EReval1.iob2".split())
