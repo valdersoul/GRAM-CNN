@@ -45,3 +45,5 @@ Example pre-trained model:
 =======================
 > JNLPBA:
 > - use_wordTrue use_charTrue drop_out0.5 hidden_size675 hidden_layer12 lowerTrue allembFalse kernels2, 3, 4 num_kernels40, 40, 40 paddingTrue ptsTrue w_emb200
+> - Result image:
+![alt text](https://github.com/valdersoul/GRAM-CNN/blob/master/src/JNLPBA_res.png)
