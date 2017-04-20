@@ -4,10 +4,8 @@ GRAM-CNN
 Pre-trained embedding are from: 
 https://github.com/cambridgeltl/BioNLP-2016
 
-
 Some code (loader.py and utils.py) are adopted from:
 https://github.com/glample/tagger
-
 
 Source code for the paper:
 
