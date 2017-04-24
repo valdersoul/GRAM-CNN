@@ -52,7 +52,7 @@ class n_gram(Model):
 					grams.append(tf.reshape(tf.gather(layers[j - 1], i), [1, -1]))
 				else:
 					# the indices related to the word
-					indices = list(range(i - j + 1 if i - j + 1 > 0 else 0, i + 1))
+					indices = list(range(i - j + 1 if i - j + 1 > 0 else 0, i + 1 if i + 1 < max_seq_len -j + 1 else max_seq_len -j + 1))
 					gram_feature = tf.gather(layers[j - 1], indices)
 					grams.append(tf.reshape(tf.reduce_max(gram_feature, axis = 0, keep_dims = True), [1,-1]))
 			outputs.append(tf.concat(grams, 1))
