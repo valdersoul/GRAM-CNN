@@ -9,14 +9,14 @@ https://github.com/carpedm20/lstm-char-cnn-tensorflow/blob/master/models/TDNN.py
 Source code for the paper: 
 
 ----------
-Requirements:
+Requirements (python libraries):
 ==================
 
- - Tensorflow  1.0.0
- - gensim 0.13.2
- - numpy
+ - Tensorflow  1.0.0 : pip install tensorflow
+ - gensim 0.13.2 : pip install gensim==0.13.2
+ - numpy : pip install numpy
  - python2.7
-
+ - pre-trained embedding: download from https://drive.google.com/open?id=0BzMCqpcgEJgiUWs0ZnU0NlFTam8 and put it into embeddings folder
 --------
 
 Datasets (in dataset folder):
@@ -29,22 +29,25 @@ Datasets (in dataset folder):
 Train GRAMCNN example:
 =================
 ~~~~
-> - python train.py --train ../dataset/NLPBA/train/train.eng --dev ../dataset/NLPBA/train/dev.eng --test ../dataset/NLPBA/test/Genia4EReval1.iob2 --pre_emb ../embeddings/bio_nlp_vec/PubMed-shuffle-win-30.bin -W 100 -H 1 -D 0.5 --lower 1 -A 0 --tag_scheme iob -P 0 -S 0 -w 200 -K 2,3,4 -k 40,40,40 <br>
+> python train.py --train ../dataset/NLPBA/train/train.eng --dev ../dataset/NLPBA/train/dev.eng --test ../dataset/NLPBA/test/Genia4EReval1.iob2 --pre_emb ../embeddings/bio_nlp_vec/PubMed-shuffle-win-30.bin -W 100 -H 1 -D 0.5 --lower 1 -A 0 --tag_scheme iob -P 0 -S 0 -w 200 -K 2,3,4 -k 40,40,40
 ~~~~
 > - This will train a one layer Bi-directional LSTM network with hidden size 100 and drop out ratio 0.5, -P set to 0 means that use LSTM 
 
 ~~~~
-> - python train.py --train dataset/NLPBA/train/train.eng --dev dataset/NLPBA/train/dev.eng --test dataset/NLPBA/test/Genia4EReval1.iob2 --pre_emb embeddings/bio_nlp_vec/PubMed-shuffle-win-30.bin -D 0.5 -A 0 -W 675 -w 200 -H 7 --lower 1 -K 2,3,4 -k 40,40,40 -P 1 -S 0 --tag_scheme iob <br>
+> python train.py --train dataset/NLPBA/train/train.eng --dev dataset/NLPBA/train/dev.eng --test dataset/NLPBA/test/Genia4EReval1.iob2 --pre_emb embeddings/bio_nlp_vec/PubMed-shuffle-win-30.bin -D 0.5 -A 0 -W 675 -w 200 -H 7 --lower 1 -K 2,3,4 -k 40,40,40 -P 1 -S 0 --tag_scheme iob
 ~~~~
 > - Set -p 1, this will train GRAMCNN network, -W and -H has no meaning here, drop out ratio is 0.5
 
-> Detailed parameters setting are in src/train.py
+> - Detailed parameters setting are in src/train.py
+~~~~
+> python train.py --help
+~~~~
 
 Infer GRAMCNN example:
 ======================
 > - To test the pre-trained model, just replace train.py with infer.py
 ~~~~
-> - python infer.py --train ../dataset/NLPBA/train/train.eng --dev ../dataset/NLPBA/train/dev.eng --test ../dataset/NLPBA/test/Genia4EReval1.iob2 --pre_emb ../embeddings/bio_nlp_vec/PubMed-shuffle-win-30.bin -W 100 -H 1 -D 0.5 --lower 1 -A 0 --tag_scheme iob -P 0 -S 0 -w 200 -K 2,3,4 -k 40,40,40 <br>
+> python infer.py --train ../dataset/NLPBA/train/train.eng --dev ../dataset/NLPBA/train/dev.eng --test ../dataset/NLPBA/test/Genia4EReval1.iob2 --pre_emb ../embeddings/bio_nlp_vec/PubMed-shuffle-win-30.bin -W 675 -H 12 -D 0.5 --lower 1 -A 0 --tag_scheme iob -P 0 -S 0 -w 200 -K 2,3,4 -k 40,40,40
 ~~~~
 
 Example pre-trained model:
