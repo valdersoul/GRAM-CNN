@@ -9,7 +9,7 @@ https://github.com/carpedm20/lstm-char-cnn-tensorflow/blob/master/models/TDNN.py
 Source code for the paper: 
 
 ----------
-Requirements (python libraries):
+Requirements:
 ==================
 
  - Tensorflow  1.0.0 : pip install tensorflow
