@@ -16,6 +16,7 @@ class GRAMCNN(Model):
 				use_word = True,
 				use_char = True,
 				use_pts = True,
+				train_size = 10000,
 				feature_maps=[50, 100, 150, 200, 200, 200, 200],
 				kernels=[1,2,3,4,5,6,7],
 				forward_only = False,
@@ -24,7 +25,8 @@ class GRAMCNN(Model):
 				word_emb = 200, char_emb = 25, pt_emb = 15,
 				drop_out = 0.5, num_classes = 3, word2vec = None, highway = True, crf = True, padding = False,
 				max_seq_len = 200):
-
+		
+		self.train_size = train_size
 		self.use_word = use_word
 		self.use_char = use_char
 		self.use_pts  = use_pts
@@ -150,7 +152,6 @@ class GRAMCNN(Model):
 			if self.use_word:
 				combined_emb = tf.concat([word_vecs, combined_emb], 1)
 
-			# 1x1 convolution
 			combined_emb = tf.reshape(combined_emb, [-1,self.total_emb_size])
 
 			if self.highway:
@@ -223,7 +224,7 @@ class GRAMCNN(Model):
 			self.learning_rate = tf.train.exponential_decay(
 							0.002,                # Base learning rate.
 							self.global_step,  # Current index into the dataset.
-							20000,          # Decay step.
+							20*self.train_size,          # Decay step.
 							0.95,                # Decay rate.
 							staircase=True)
 

@@ -332,7 +332,7 @@ gramcnn = GRAMCNN(n_words, len(char_to_id), len(pt_to_id),
                     drop_out = parameters['dropout'],
                     word2vec = word_emb_weight,feature_maps=parameters['num_kernels'],#,200,200, 200,200],
                     kernels=parameters['kernels'], hidden_size = parameters['word_lstm_dim'], hidden_layers = parameters['hidden_layer'],
-                    padding = parameters['padding'], max_seq_len = max_seq_len)
+                    padding = parameters['padding'], max_seq_len = max_seq_len, train_size = len(train_data))
 
 if parameters['reload']:
     gramcnn.load(models_path ,model_name)
