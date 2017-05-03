@@ -1,5 +1,8 @@
 GRAM-CNN
 ===================
+GRAM-CNN is a novel end-to-end approach for biomedical NER tasks. 
+To automatically label a word, this method uses the local information around the word. Therefore, the GRAM-CNN method doesn't require any specific knowledge or feature engineering and can be theoretically applied to all existing NER problems. \\
+The GRAM-CNN approach was evaluated on three well-known biomedical datasets containing different BioNER entities. It obtained an F1-score of 87.38\% on the Biocreative II dataset, 86.65\% on the NCBI dataset, and 72.57\% on the JNLPBA dataset. Those results put GRAM-CNN in the lead of the biological NER methods.
 
 Pre-trained embedding are from: <br>
 https://github.com/cambridgeltl/BioNLP-2016 <br>
