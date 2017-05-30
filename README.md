@@ -1,12 +1,17 @@
 GRAM-CNN
 ===================
+GRAM-CNN is a novel end-to-end approach for biomedical NER tasks. 
+To automatically label a word, this method uses the local information around the word. Therefore, the GRAM-CNN method doesn't require any specific knowledge or feature engineering and can be theoretically applied to all existing NER problems. \\
+The GRAM-CNN approach was evaluated on three well-known biomedical datasets containing different BioNER entities. It obtained an F1-score of 87.38\% on the Biocreative II dataset, 86.65\% on the NCBI dataset, and 72.57\% on the JNLPBA dataset. Those results put GRAM-CNN in the lead of the biological NER methods.
 
 Pre-trained embedding are from: <br>
 https://github.com/cambridgeltl/BioNLP-2016 <br>
 Some code (loader.py and utils.py) are adopted from: <br>
 https://github.com/glample/tagger <br>
 https://github.com/carpedm20/lstm-char-cnn-tensorflow/blob/master/models/TDNN.py <br>
+The examples have to be run from the src repository. <br>
 Source code for the paper: 
+
 
 ----------
 Requirements:
@@ -24,6 +29,7 @@ Datasets (in dataset folder):
  - Biocreative II (http://biocreative.sourceforge.net/biocreative_2_dataset.html)
  - NCBI (https://www.ncbi.nlm.nih.gov/CBBresearch/Dogan/DISEASE/)
  - JNLPBA (http://www.nactem.ac.uk/tsujii/GENIA/ERtask/report.html) 
+
 
 
 Train GRAMCNN example:
@@ -46,8 +52,9 @@ Train GRAMCNN example:
 Infer GRAMCNN example:
 ======================
 > - To test the pre-trained model, just replace train.py with infer.py
+> - The result output file is in the evaluation repository. 
 ~~~~
-> python infer.py --train ../dataset/NLPBA/train/train.eng --dev ../dataset/NLPBA/train/dev.eng --test ../dataset/NLPBA/test/Genia4EReval1.iob2 --pre_emb ../embeddings/bio_nlp_vec/PubMed-shuffle-win-30.bin -W 675 -H 12 -D 0.5 --lower 1 -A 0 --tag_scheme iob -P 0 -S 0 -w 200 -K 2,3,4 -k 40,40,40
+> python infer.py --train ../dataset/NLPBA/train/train.eng --dev ../dataset/NLPBA/train/dev.eng --test ../dataset/NLPBA/test/Genia4EReval1.iob2 --pre_emb ../embeddings/bio_nlp_vec/PubMed-shuffle-win-30.bin -W 675 -H 12 -D 0.5 --lower 1 -A 0 --tag_scheme iob -P 1 -S 1 -w 200 -K 2,3,4 -k 40,40,40
 ~~~~
 
 Example pre-trained model:
@@ -56,3 +63,4 @@ Example pre-trained model:
 > - use_wordTrue use_charTrue drop_out0.5 hidden_size675 hidden_layer12 lowerTrue allembFalse kernels2, 3, 4 num_kernels40, 40, 40 paddingTrue ptsTrue w_emb200
 > - Result image:
 ![alt text](https://github.com/valdersoul/GRAM-CNN/blob/master/src/JNLPBA_res.png)
+
