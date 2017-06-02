@@ -64,3 +64,5 @@ Example pre-trained model:
 > - Result image:
 ![alt text](https://github.com/valdersoul/GRAM-CNN/blob/master/src/JNLPBA_res.png)
 
+> Run the example model in NCBI and BC2, please change kernel range in n_gram.py to [1,10]
+
